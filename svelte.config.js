@@ -10,7 +10,7 @@ const config = {
 	kit: {
 		// Using Vercel adapter directly with explicit Node.js runtime
 		adapter: adapter({
-			runtime: 'nodejs18.x'
+			runtime: 'nodejs18'
 		})
 	}
 };
