@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-vercel';
+import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -8,9 +8,13 @@ const config = {
 	preprocess: vitePreprocess(),
 
 	kit: {
-		// Using Vercel adapter directly with explicit Node.js runtime
+		// Using static adapter for client-side only site
 		adapter: adapter({
-			runtime: 'nodejs18'
+			pages: 'build',
+			assets: 'build',
+			fallback: 'index.html',
+			precompress: false,
+			strict: false
 		})
 	}
 };
