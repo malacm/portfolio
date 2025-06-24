@@ -5,6 +5,7 @@
 	import HandDrawnSquareBorder from '$lib/components/HandDrawnSquareBorder.svelte';
 	import AnimatedBottomBorder from '$lib/components/AnimatedBottomBorder.svelte';
 	import SandboxSubNav from '$lib/components/SandboxSubNav.svelte';
+	import CanvasSandbox from '$lib/components/CanvasSandbox.svelte';
 	import { fade, slide } from 'svelte/transition';
 
 	type NavSection = 'portfolio' | 'sandbox';
@@ -125,21 +126,23 @@
 	{:else if activeSection === 'sandbox'}
 		<div class="font-sharpie flex min-h-screen items-center justify-center p-4">
 			<div class="relative aspect-[4/3] max-h-[85vh] min-h-[500px] w-full max-w-[1440px]">
-				<div class="font-sharpie flex h-full items-center justify-center text-4xl text-white">
-					{#if activeSubNav === 'canvas'}
-						CANVAS SANDBOX
-					{:else if activeSubNav === 'threejs'}
-						THREE.JS SANDBOX
-					{:else if activeSubNav === 'shaders'}
-						SHADERS SANDBOX
-					{:else if activeSubNav === 'physics'}
-						PHYSICS SANDBOX
-					{:else if activeSubNav === 'ai'}
-						AI SANDBOX
-					{:else}
-						SANDBOX CONTENT COMING SOON
-					{/if}
-				</div>
+				{#if activeSubNav === 'canvas'}
+					<CanvasSandbox />
+				{:else}
+					<div class="font-sharpie flex h-full items-center justify-center text-4xl text-white">
+						{#if activeSubNav === 'threejs'}
+							THREE.JS SANDBOX
+						{:else if activeSubNav === 'shaders'}
+							SHADERS SANDBOX
+						{:else if activeSubNav === 'physics'}
+							PHYSICS SANDBOX
+						{:else if activeSubNav === 'ai'}
+							AI SANDBOX
+						{:else}
+							SANDBOX CONTENT COMING SOON
+						{/if}
+					</div>
+				{/if}
 			</div>
 		</div>
 	{/if}
