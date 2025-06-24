@@ -46,7 +46,7 @@
 			<div class="relative h-[160px] w-full">
 				<div class="relative z-10 p-6 pl-10">
 					<h2 class="font-sharpie mb-4 text-2xl">Tools I Use</h2>
-					<div class="grid grid-cols-3 gap-2 font-mono text-sm">
+					<div class="grid grid-cols-3 gap-2 text-sm font-sharpie">
 						<span>🧠 SvelteKit</span>
 						<span>🎨 Figma</span>
 						<span>🌐 Three.js</span>

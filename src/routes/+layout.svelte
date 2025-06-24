@@ -1,173 +1,122 @@
 <script lang="ts">
 	import '../app.css';
-	import { onMount } from 'svelte';
-	import rough from 'roughjs';
+	import BackgroundDoodles from '$lib/components/BackgroundDoodles.svelte';
+	import HandDrawnCircleBorder from '$lib/components/HandDrawnCircleBorder.svelte';
+	import HandDrawnSquareBorder from '$lib/components/HandDrawnSquareBorder.svelte';
+	import AnimatedBottomBorder from '$lib/components/AnimatedBottomBorder.svelte';
+	import SandboxSubNav from '$lib/components/SandboxSubNav.svelte';
+	import { fade, slide } from 'svelte/transition';
 
-	let portfolioContainer: HTMLDivElement;
-	let sandboxContainer: HTMLDivElement;
-	let portfolioSvg: SVGElement;
-	let sandboxSvg: SVGElement;
-	let activeSection: 'portfolio' | 'sandbox' = 'portfolio';
+	type NavSection = 'portfolio' | 'sandbox';
+	const navs: { key: NavSection; label: string }[] = [
+		{ key: 'portfolio', label: 'PORTFOLIO: WIP' },
+		{ key: 'sandbox', label: 'SANDBOX' }
+	];
 
-	// Store rough.js instances for each label
-	let portfolioRc: any;
-	let sandboxRc: any;
-	let portfolioDrawing: any;
-	let sandboxDrawing: any;
+	let activeSection: NavSection = 'portfolio';
+	let activeSubNav: string | null = null;
+	let showSandboxSubnav = false;
 
-	function createRoughInstance(svg: SVGElement) {
-		const rc = rough.svg(svg);
-		rc.seed = 12345; // Fixed seed for consistency
-		return rc;
-	}
-
-	function drawBorder(container: HTMLDivElement, svg: SVGElement, rc: any, isVisible: boolean = false, isActive: boolean = false) {
-		if (container && svg) {
-			const rect = container.getBoundingClientRect();
-			svg.setAttribute('width', `${rect.width}`);
-			svg.setAttribute('height', `${rect.height}`);
-			svg.innerHTML = '';
-
-			if (isVisible) {
-				// Add filter for glow effect on active borders only
-				if (isActive) {
-					const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-					const filter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
-					filter.setAttribute('id', `glow-${Math.random().toString(36).substr(2, 9)}`);
-					filter.setAttribute('x', '-50%');
-					filter.setAttribute('y', '-50%');
-					filter.setAttribute('width', '200%');
-					filter.setAttribute('height', '200%');
-					
-					const feGaussianBlur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
-					feGaussianBlur.setAttribute('stdDeviation', '3');
-					feGaussianBlur.setAttribute('result', 'coloredBlur');
-					
-					const feMerge = document.createElementNS('http://www.w3.org/2000/svg', 'feMerge');
-					const feMergeNode1 = document.createElementNS('http://www.w3.org/2000/svg', 'feMergeNode');
-					feMergeNode1.setAttribute('in', 'coloredBlur');
-					const feMergeNode2 = document.createElementNS('http://www.w3.org/2000/svg', 'feMergeNode');
-					feMergeNode2.setAttribute('in', 'SourceGraphic');
-					
-					feMerge.appendChild(feMergeNode1);
-					feMerge.appendChild(feMergeNode2);
-					filter.appendChild(feGaussianBlur);
-					filter.appendChild(feMerge);
-					defs.appendChild(filter);
-					svg.appendChild(defs);
-				}
-
-				const drawing = rc.rectangle(2, 2, rect.width - 4, rect.height - 4, {
-					stroke: 'white',
-					strokeWidth: 2.5,
-					roughness: 1.8,
-					fillStyle: 'none', // No fill for any border
-					seed: Math.random() * 1000,
-					...(isActive && { filter: `url(#${svg.querySelector('filter')?.getAttribute('id')})` })
-				});
-				svg.appendChild(drawing);
-				return drawing;
+	function handleNavClick(section: NavSection) {
+		if (section === 'sandbox') {
+			if (activeSection !== 'sandbox') {
+				showSandboxSubnav = false;
 			}
-		}
-		return null;
-	}
-
-	function handlePortfolioClick() {
-		if (activeSection === 'portfolio') return;
-		
-		// Remove border from current active section
-		if (activeSection === 'sandbox') {
-			sandboxSvg.innerHTML = '';
-		}
-		
-		// Draw border on new active section
-		portfolioDrawing = drawBorder(portfolioContainer, portfolioSvg, portfolioRc, true, true);
-		activeSection = 'portfolio';
-	}
-
-	function handleSandboxClick() {
-		if (activeSection === 'sandbox') return;
-		
-		// Remove border from current active section
-		if (activeSection === 'portfolio') {
-			portfolioSvg.innerHTML = '';
-		}
-		
-		// Draw border on new active section
-		sandboxDrawing = drawBorder(sandboxContainer, sandboxSvg, sandboxRc, true, true);
-		activeSection = 'sandbox';
-	}
-
-	function handlePortfolioHover() {
-		if (activeSection === 'portfolio') return;
-		
-		// Only show border if there isn't one already
-		if (!portfolioSvg.querySelector('path')) {
-			drawBorder(portfolioContainer, portfolioSvg, portfolioRc, true, false);
+			activeSection = section;
+			if (!activeSubNav) {
+				activeSubNav = 'canvas';
+			}
+			// Reveal subnav on click
+			showSandboxSubnav = true;
+		} else {
+			activeSection = section;
+			activeSubNav = null;
+			showSandboxSubnav = false;
 		}
 	}
 
-	function handlePortfolioLeave() {
-		if (activeSection === 'portfolio') return;
-		
-		// Remove border on leave
-		portfolioSvg.innerHTML = '';
+	function handleSubNavChange(event: CustomEvent) {
+		activeSubNav = event.detail.key;
 	}
-
-	function handleSandboxHover() {
-		if (activeSection === 'sandbox') return;
-		
-		// Only show border if there isn't one already
-		if (!sandboxSvg.querySelector('path')) {
-			drawBorder(sandboxContainer, sandboxSvg, sandboxRc, true, false);
-		}
-	}
-
-	function handleSandboxLeave() {
-		if (activeSection === 'sandbox') return;
-		
-		// Remove border on leave
-		sandboxSvg.innerHTML = '';
-	}
-
-	onMount(() => {
-		// Initialize rough.js instances
-		portfolioRc = createRoughInstance(portfolioSvg);
-		sandboxRc = createRoughInstance(sandboxSvg);
-		
-		// Draw initial active border
-		portfolioDrawing = drawBorder(portfolioContainer, portfolioSvg, portfolioRc, true, true);
-	});
 </script>
 
 <div class="relative min-h-screen bg-black">
-	<!-- Navigation Labels -->
-	<div class="absolute top-8 left-8 z-20 space-y-4">
-		<!-- Portfolio WIP Label -->
-		<div
-			class="relative cursor-pointer transition-all duration-300 ease-out hover:opacity-80 hover:scale-105"
-			bind:this={portfolioContainer}
-			on:click={handlePortfolioClick}
-			on:mouseenter={handlePortfolioHover}
-			on:mouseleave={handlePortfolioLeave}
-			class:opacity-50={activeSection !== 'portfolio'}
-		>
-			<svg bind:this={portfolioSvg} class="pointer-events-none absolute inset-0" />
-			<div class="font-sharpie relative z-10 px-6 py-4 text-2xl text-white transition-transform duration-300">PORTFOLIO: WIP</div>
-		</div>
+	<!-- Background Doodles -->
+	<BackgroundDoodles />
 
-		<!-- Sandbox Label -->
-		<div
-			class="relative cursor-pointer transition-all duration-300 ease-out hover:opacity-80 hover:scale-105"
-			bind:this={sandboxContainer}
-			on:click={handleSandboxClick}
-			on:mouseenter={handleSandboxHover}
-			on:mouseleave={handleSandboxLeave}
-			class:opacity-50={activeSection !== 'sandbox'}
+	<!-- Portfolio Navigation (Left Side) -->
+	<div class="absolute top-8 left-8 z-20">
+		<HandDrawnCircleBorder
+			isVisible={activeSection === 'portfolio'}
+			isActive={activeSection === 'portfolio'}
+			animateOnHover={false}
 		>
-			<svg bind:this={sandboxSvg} class="pointer-events-none absolute inset-0" />
-			<div class="font-sharpie relative z-10 px-6 py-4 text-2xl text-white transition-transform duration-300">SANDBOX</div>
-		</div>
+			<div
+				class="font-sharpie cursor-pointer px-6 py-4 text-2xl text-white transition-all transition-transform duration-300 ease-out hover:scale-105 hover:opacity-80"
+				on:click={() => handleNavClick('portfolio')}
+				on:keydown={(e) => e.key === 'Enter' && handleNavClick('portfolio')}
+				role="button"
+				tabindex="0"
+				aria-label="Switch to PORTFOLIO section"
+				class:opacity-50={activeSection !== 'portfolio'}
+			>
+				PORTFOLIO: WIP
+			</div>
+		</HandDrawnCircleBorder>
+	</div>
+
+	<!-- Sandbox Navigation (Right Side) -->
+	<div class="absolute top-8 right-8 z-20">
+		<HandDrawnSquareBorder
+			isVisible={activeSection === 'sandbox'}
+			isActive={activeSection === 'sandbox'}
+			animateOnHover={false}
+		>
+			<div class="relative flex h-full w-[320px] flex-col items-center justify-center gap-2">
+				<div
+					class="font-sharpie mb-4 w-full cursor-pointer text-center text-4xl text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
+					on:click={() => handleNavClick('sandbox')}
+					on:keydown={(e) => e.key === 'Enter' && handleNavClick('sandbox')}
+					role="button"
+					tabindex="0"
+					aria-label="Activate SANDBOX section"
+					class:border-b-2={activeSection === 'sandbox'}
+					class:border-white={activeSection === 'sandbox'}
+					class:pb-2={activeSection === 'sandbox'}
+				>
+					SANDBOX
+				</div>
+				<div
+					class="flex w-full flex-col items-center gap-2 transition-all duration-500"
+					style="min-height: 220px; justify-content: flex-start;"
+				>
+					{#if showSandboxSubnav}
+						<div transition:slide={{ duration: 350 }} class="flex w-full flex-col items-center">
+							{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'threejs', label: 'THREE.JS' }, { key: 'shaders', label: 'SHADERS' }, { key: 'physics', label: 'PHYSICS' }, { key: 'ai', label: 'AI' }] as item}
+								<AnimatedBottomBorder isActive={activeSubNav === item.key}>
+									<div
+										class="font-sharpie cursor-pointer px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
+										on:click={() => {
+											handleNavClick('sandbox');
+											activeSubNav = item.key;
+										}}
+										on:keydown={(e) =>
+											e.key === 'Enter' &&
+											(handleNavClick('sandbox'), (activeSubNav = item.key))}
+										role="button"
+										tabindex="0"
+										aria-label={`Switch to ${item.label} sandbox`}
+										class:opacity-50={activeSubNav !== item.key}
+									>
+										{item.label}
+									</div>
+								</AnimatedBottomBorder>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			</div>
+		</HandDrawnSquareBorder>
 	</div>
 
 	<!-- Content Area -->
@@ -175,9 +124,21 @@
 		<slot />
 	{:else if activeSection === 'sandbox'}
 		<div class="font-sharpie flex min-h-screen items-center justify-center p-4">
-			<div class="relative aspect-[4/3] max-h-[85vh] min-h-[500px] w-full max-w-[1440px] bg-black">
+			<div class="relative aspect-[4/3] max-h-[85vh] min-h-[500px] w-full max-w-[1440px]">
 				<div class="font-sharpie flex h-full items-center justify-center text-4xl text-white">
-					SANDBOX CONTENT COMING SOON
+					{#if activeSubNav === 'canvas'}
+						CANVAS SANDBOX
+					{:else if activeSubNav === 'threejs'}
+						THREE.JS SANDBOX
+					{:else if activeSubNav === 'shaders'}
+						SHADERS SANDBOX
+					{:else if activeSubNav === 'physics'}
+						PHYSICS SANDBOX
+					{:else if activeSubNav === 'ai'}
+						AI SANDBOX
+					{:else}
+						SANDBOX CONTENT COMING SOON
+					{/if}
 				</div>
 			</div>
 		</div>
