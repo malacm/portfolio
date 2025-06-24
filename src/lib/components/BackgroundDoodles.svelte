@@ -13,21 +13,33 @@
 	const isBrowser = typeof window !== 'undefined';
 
 	// Doodle configuration
-	const DOODLE_COUNT = 20;
+	const DOODLE_COUNT = 15;
 	const DOODLE_TYPES = ['squiggle', 'loop', 'spiral', 'zigzag', 'wave', 'scribble', 'curly'];
 
+	// Shared material to prevent memory leaks
+	let sharedMaterial: THREE.LineBasicMaterial;
+
+	// Performance optimization
+	let lastTime = 0;
+	let frameCount = 0;
+	const targetFPS = 30;
+	const frameInterval = 1000 / targetFPS;
+
 	function createSharpieMaterial() {
-		return new THREE.LineBasicMaterial({
-			color: 0xffffff,
-			transparent: true,
-			opacity: 0.12,
-			linewidth: 2
-		});
+		if (!sharedMaterial) {
+			sharedMaterial = new THREE.LineBasicMaterial({
+				color: 0xffffff,
+				transparent: true,
+				opacity: 0.12,
+				linewidth: 2
+			});
+		}
+		return sharedMaterial;
 	}
 
 	function createRandomSquiggle() {
 		const points = [];
-		const segments = 8 + Math.floor(Math.random() * 8);
+		const segments = 6 + Math.floor(Math.random() * 4);
 		const amplitude = 0.3 + Math.random() * 0.4;
 		const frequency = 0.5 + Math.random() * 1;
 		
@@ -43,7 +55,7 @@
 
 	function createRandomLoop() {
 		const points = [];
-		const segments = 20;
+		const segments = 12;
 		const radius = 0.3 + Math.random() * 0.4;
 		const noise = 0.1;
 		
@@ -59,8 +71,8 @@
 
 	function createRandomSpiral() {
 		const points = [];
-		const turns = 2 + Math.random() * 3;
-		const segments = 50;
+		const turns = 2 + Math.random() * 2;
+		const segments = 30;
 		
 		for (let i = 0; i <= segments; i++) {
 			const t = i / segments;
@@ -76,7 +88,7 @@
 
 	function createRandomZigzag() {
 		const points = [];
-		const segments = 6 + Math.floor(Math.random() * 6);
+		const segments = 4 + Math.floor(Math.random() * 4);
 		const amplitude = 0.4 + Math.random() * 0.3;
 		
 		for (let i = 0; i <= segments; i++) {
@@ -90,7 +102,7 @@
 
 	function createRandomWave() {
 		const points = [];
-		const segments = 30;
+		const segments = 20;
 		const amplitude = 0.3 + Math.random() * 0.4;
 		const frequency = 1 + Math.random() * 2;
 		
@@ -106,7 +118,7 @@
 
 	function createRandomScribble() {
 		const points = [];
-		const segments = 15 + Math.floor(Math.random() * 10);
+		const segments = 10 + Math.floor(Math.random() * 6);
 		
 		let x = 0, y = 0;
 		points.push(new THREE.Vector3(x, y, 0));
@@ -124,7 +136,7 @@
 
 	function createRandomCurly() {
 		const points = [];
-		const segments = 25;
+		const segments = 15;
 		const amplitude = 0.2 + Math.random() * 0.3;
 		const frequency = 2 + Math.random() * 3;
 		
@@ -210,13 +222,14 @@
 		);
 		camera.position.z = 10;
 
-		// Renderer setup
+		// Renderer setup with performance optimizations
 		renderer = new THREE.WebGLRenderer({ 
-			antialias: true,
-			alpha: true 
+			antialias: false,
+			alpha: true,
+			powerPreference: "high-performance"
 		});
 		renderer.setSize(container.clientWidth, container.clientHeight);
-		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 		container.appendChild(renderer.domElement);
 
 		// Create doodles group
@@ -229,17 +242,28 @@
 			doodles.add(doodle);
 		}
 
-		// Animation loop
-		function animate() {
+		// Animation loop with delta time and frame limiting
+		function animate(currentTime = 0) {
 			animationId = requestAnimationFrame(animate);
 			
-			// Slowly rotate all doodles (normalize to prevent precision issues)
-			doodles.rotation.z = (doodles.rotation.z + 0.0005) % (Math.PI * 2);
+			// Frame rate limiting
+			if (currentTime - lastTime < frameInterval) {
+				return;
+			}
 			
-			// Individual doodle animations
+			const deltaTime = currentTime - lastTime;
+			lastTime = currentTime;
+			
+			// Normalize delta time to prevent precision issues
+			const normalizedDelta = Math.min(deltaTime / 16.67, 2);
+			
+			// Slowly rotate all doodles with delta time
+			doodles.rotation.z = (doodles.rotation.z + 0.0003 * normalizedDelta) % (Math.PI * 2);
+			
+			// Individual doodle animations with delta time
 			doodles.children.forEach((doodle, index) => {
-				doodle.rotation.z = (doodle.rotation.z + 0.001 * (index % 2 === 0 ? 1 : -1)) % (Math.PI * 2);
-				doodle.position.y += Math.sin(Date.now() * 0.0005 + index) * 0.0005;
+				doodle.rotation.z = (doodle.rotation.z + 0.0006 * normalizedDelta * (index % 2 === 0 ? 1 : -1)) % (Math.PI * 2);
+				doodle.position.y += Math.sin(currentTime * 0.0003 + index) * 0.0003 * normalizedDelta;
 			});
 
 			renderer.render(scene, camera);
@@ -265,6 +289,29 @@
 		renderer.setSize(width, height);
 	}
 
+	function cleanup() {
+		if (animationId) {
+			cancelAnimationFrame(animationId);
+		}
+		
+		if (renderer) {
+			renderer.dispose();
+		}
+		
+		if (sharedMaterial) {
+			sharedMaterial.dispose();
+		}
+		
+		// Dispose all geometries
+		if (doodles) {
+			doodles.children.forEach(child => {
+				if (child instanceof THREE.Line && child.geometry) {
+					child.geometry.dispose();
+				}
+			});
+		}
+	}
+
 	onMount(() => {
 		if (isBrowser) {
 			init();
@@ -274,12 +321,7 @@
 
 	onDestroy(() => {
 		if (isBrowser) {
-			if (animationId) {
-				cancelAnimationFrame(animationId);
-			}
-			if (renderer) {
-				renderer.dispose();
-			}
+			cleanup();
 			window.removeEventListener('resize', handleResize);
 		}
 	});

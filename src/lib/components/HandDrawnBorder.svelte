@@ -71,7 +71,7 @@
 
 <div 
 	bind:this={containerEl} 
-	class="relative h-full w-full"
+	class="relative h-full w-full max-w-[1440px]"
 	style="width: {width}; height: {height};"
 >
 	<!-- Sketchy Border SVG -->

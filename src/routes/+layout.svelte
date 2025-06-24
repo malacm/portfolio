@@ -93,24 +93,36 @@
 				>
 					{#if showSandboxSubnav}
 						<div transition:slide={{ duration: 350 }} class="flex w-full flex-col items-center">
-							{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'threejs', label: 'THREE.JS' }, { key: 'shaders', label: 'SHADERS' }, { key: 'physics', label: 'PHYSICS' }, { key: 'ai', label: 'AI' }] as item}
+							{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'threejs', label: 'THREE.JS' }, { key: 'shaders', label: 'SHADERS' }, { key: 'physics', label: 'PHYSICS', href: '/physics-standalone' }, { key: 'ai', label: 'AI' }] as item}
 								<AnimatedBottomBorder isActive={activeSubNav === item.key}>
-									<div
-										class="font-sharpie cursor-pointer px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
-										on:click={() => {
-											handleNavClick('sandbox');
-											activeSubNav = item.key;
-										}}
-										on:keydown={(e) =>
-											e.key === 'Enter' &&
-											(handleNavClick('sandbox'), (activeSubNav = item.key))}
-										role="button"
-										tabindex="0"
-										aria-label={`Switch to ${item.label} sandbox`}
-										class:opacity-50={activeSubNav !== item.key}
-									>
-										{item.label}
-									</div>
+									{#if item.href}
+										<a
+											href={item.href}
+											target="_blank"
+											rel="noopener noreferrer"
+											class="font-sharpie cursor-pointer px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
+											class:opacity-50={activeSubNav !== item.key}
+										>
+											{item.label}
+										</a>
+									{:else}
+										<div
+											class="font-sharpie cursor-pointer px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
+											on:click={() => {
+												handleNavClick('sandbox');
+												activeSubNav = item.key;
+											}}
+											on:keydown={(e) =>
+												e.key === 'Enter' &&
+												(handleNavClick('sandbox'), (activeSubNav = item.key))}
+											role="button"
+											tabindex="0"
+											aria-label={`Switch to ${item.label} sandbox`}
+											class:opacity-50={activeSubNav !== item.key}
+										>
+											{item.label}
+										</div>
+									{/if}
 								</AnimatedBottomBorder>
 							{/each}
 						</div>
@@ -134,8 +146,6 @@
 							THREE.JS SANDBOX
 						{:else if activeSubNav === 'shaders'}
 							SHADERS SANDBOX
-						{:else if activeSubNav === 'physics'}
-							PHYSICS SANDBOX
 						{:else if activeSubNav === 'ai'}
 							AI SANDBOX
 						{:else}
