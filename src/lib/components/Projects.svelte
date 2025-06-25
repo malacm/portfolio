@@ -1,6 +1,7 @@
 <script lang="ts">
 	import HandDrawnBorder from './HandDrawnBorder.svelte';
 	import { onMount } from 'svelte';
+	import HandDrawnIOSWindow from './HandDrawnIOSWindow.svelte';
 
 	interface Project {
 		name: string;
@@ -44,6 +45,8 @@
 	];
 
 	let isMobile = false;
+	let windowOpen = false;
+	let windowProject: Project | null = null;
 
 	onMount(() => {
 		checkMobile();
@@ -53,6 +56,16 @@
 
 	function checkMobile() {
 		isMobile = window.innerWidth < 768;
+	}
+
+	function openProjectWindow(project: Project) {
+		windowProject = project;
+		windowOpen = true;
+	}
+
+	function closeProjectWindow() {
+		windowOpen = false;
+		windowProject = null;
 	}
 </script>
 
@@ -96,6 +109,7 @@
 						<div class="mt-4 flex gap-3 sm:gap-2">
 							<button
 								class="font-sharpie rounded-full bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20 sm:px-3 sm:py-1"
+								on:click={() => openProjectWindow(project)}
 							>
 								View Project →
 							</button>
@@ -111,6 +125,16 @@
 			</div>
 		{/each}
 	</div>
+
+	<!-- iOS Window Modal -->
+	{#if windowOpen && windowProject}
+		<HandDrawnIOSWindow
+			open={windowOpen}
+			url={windowProject.url}
+			title={windowProject.name}
+			on:close={closeProjectWindow}
+		/>
+	{/if}
 
 	<!-- Footer -->
 	<div class="font-sharpie mt-6 w-full pr-4 text-right text-lg sm:mt-4">

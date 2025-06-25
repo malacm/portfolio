@@ -71,7 +71,7 @@
 <div 
 	bind:this={containerEl} 
 	class="relative {hasFixedHeight ? 'h-full w-full' : 'w-full'}"
-	style="width: {width}; {hasFixedHeight ? `height: ${height};` : ''} {isNotebookContainer ? 'max-width: 100%; max-height: 100%;' : ''}"
+	style="width: {width}; {hasFixedHeight ? `height: ${height};` : ''} {isNotebookContainer ? 'max-width: 100%; max-height: 100%;' : ''} height: 100%;"
 >
 	<!-- Sketchy Border SVG -->
 	<svg
@@ -82,7 +82,7 @@
 	<!-- Content slot -->
 	<div 
 		class="relative z-20 {hasFixedHeight ? 'h-full w-full' : 'p-4'}"
-		style="padding: 0.5rem;"
+		style="padding: 0.5rem; height: 100%; width: 100%;"
 	>
 		<slot />
 	</div>
