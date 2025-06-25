@@ -27,26 +27,36 @@
 	$: showFixedBottomNav = isMobile;
 </script>
 
-<div class="notebook-outer">
-	<HandDrawnBorder width={notebookWidth} height={notebookHeight} isNotebookContainer={true}>
-		<div class="notebook-inner">
-			<div class="page-content-scroll">
-				<PageContent page={activePage} />
-			</div>
-			{#if !isMobile}
-				<div class="side-nav">
-					<SideNavTabs on:tabClick={(e) => handleTabClick(e.detail)} {activePage} isFixedBottom={false} />
+<div class="flex items-center justify-center">
+	<div class="notebook-outer">
+		<HandDrawnBorder width={notebookWidth} height={notebookHeight} isNotebookContainer={true}>
+			<div class="notebook-inner">
+				<div class="page-content-scroll">
+					<PageContent page={activePage} />
 				</div>
-			{/if}
-		</div>
-	</HandDrawnBorder>
+				{#if !isMobile}
+					<div class="side-nav">
+						<SideNavTabs
+							on:tabClick={(e) => handleTabClick(e.detail)}
+							{activePage}
+							isFixedBottom={false}
+						/>
+					</div>
+				{/if}
+			</div>
+		</HandDrawnBorder>
+	</div>
 </div>
 
 {#if showFixedBottomNav}
-	<div class="fixed bottom-0 left-0 right-0 w-full z-[9999]">
+	<div class="fixed right-0 bottom-0 left-0 z-[9999] w-full">
 		<HandDrawnBorder height="70px" width="95vw">
-			<div class="w-full h-full bg-black">
-				<SideNavTabs on:tabClick={(e) => handleTabClick(e.detail)} {activePage} isFixedBottom={true} />
+			<div class="h-full w-full bg-black">
+				<SideNavTabs
+					on:tabClick={(e) => handleTabClick(e.detail)}
+					{activePage}
+					isFixedBottom={true}
+				/>
 			</div>
 		</HandDrawnBorder>
 	</div>
@@ -54,10 +64,11 @@
 
 <style>
 	.notebook-outer {
-		min-height: 100vh;
-		min-width: 100vw;
+		height: 85vh;
+		width: 85vw;
 		display: flex;
 		justify-content: center;
+		align-items: center;
 		background: black;
 	}
 	.notebook-inner {
@@ -68,13 +79,17 @@
 	.page-content-scroll {
 		flex: 1;
 		height: 100%;
-		overflow: auto;
+		overflow: hidden;
 		padding: 2rem;
 	}
 
 	@media (max-width: 767px) {
 		.page-content-scroll {
 			padding: 0;
+		}
+		.notebook-outer {
+			height: 100vh;
+			width: 100vw;
 		}
 	}
 	.side-nav {
