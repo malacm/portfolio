@@ -6,7 +6,10 @@
 	import AnimatedBottomBorder from '$lib/components/AnimatedBottomBorder.svelte';
 	import SandboxSubNav from '$lib/components/SandboxSubNav.svelte';
 	import CanvasSandbox from '$lib/components/CanvasSandbox.svelte';
+	import MicroInteractionOne from '$lib/components/MicroInteractionOne.svelte';
 	import { fade, slide } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import HandDrawnBorder from '$lib/components/HandDrawnBorder.svelte';
 
 	type NavSection = 'portfolio' | 'sandbox';
 	const navs: { key: NavSection; label: string }[] = [
@@ -17,140 +20,200 @@
 	let activeSection: NavSection = 'portfolio';
 	let activeSubNav: string | null = null;
 	let showSandboxSubnav = false;
+	let isMobile = false;
+	let showMobileMenu = false;
+
+	onMount(() => {
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		return () => window.removeEventListener('resize', checkMobile);
+	});
+
+	function checkMobile() {
+		isMobile = window.innerWidth < 768;
+		if (isMobile) {
+			showSandboxSubnav = false;
+		}
+	}
 
 	function handleNavClick(section: NavSection) {
-		if (section === 'sandbox') {
-			if (activeSection !== 'sandbox') {
-				showSandboxSubnav = false;
+		if (isMobile) {
+			if (section === 'sandbox') {
+				showMobileMenu = !showMobileMenu;
+			} else {
+				activeSection = section;
+				activeSubNav = null;
+				showMobileMenu = false;
 			}
-			activeSection = section;
-			if (!activeSubNav) {
-				activeSubNav = 'canvas';
-			}
-			// Reveal subnav on click
-			showSandboxSubnav = true;
 		} else {
-			activeSection = section;
-			activeSubNav = null;
-			showSandboxSubnav = false;
+			if (section === 'sandbox') {
+				activeSection = 'sandbox';
+				if (!activeSubNav) activeSubNav = 'canvas';
+			} else {
+				activeSection = section;
+				activeSubNav = null;
+			}
 		}
 	}
 
 	function handleSubNavChange(event: CustomEvent) {
 		activeSubNav = event.detail.key;
+		if (isMobile) {
+			showMobileMenu = false;
+		}
+	}
+
+	function handleMobileSubNavClick(key: string) {
+		activeSection = 'sandbox';
+		activeSubNav = key;
+		showMobileMenu = false;
 	}
 </script>
 
 <div class="relative min-h-screen bg-black">
-	<!-- Background Doodles -->
-	<BackgroundDoodles />
-
-	<!-- Portfolio Navigation (Left Side) -->
-	<div class="absolute top-8 left-8 z-20">
-		<HandDrawnCircleBorder
-			isVisible={activeSection === 'portfolio'}
-			isActive={activeSection === 'portfolio'}
-			animateOnHover={false}
-		>
-			<div
-				class="font-sharpie cursor-pointer px-6 py-4 text-2xl text-white transition-all transition-transform duration-300 ease-out hover:scale-105 hover:opacity-80"
-				on:click={() => handleNavClick('portfolio')}
-				on:keydown={(e) => e.key === 'Enter' && handleNavClick('portfolio')}
-				role="button"
-				tabindex="0"
-				aria-label="Switch to PORTFOLIO section"
-				class:opacity-50={activeSection !== 'portfolio'}
-			>
-				PORTFOLIO: WIP
-			</div>
-		</HandDrawnCircleBorder>
-	</div>
-
-	<!-- Sandbox Navigation (Right Side) -->
-	<div class="absolute top-8 right-8 z-20">
-		<HandDrawnSquareBorder
-			isVisible={activeSection === 'sandbox'}
-			isActive={activeSection === 'sandbox'}
-			animateOnHover={false}
-		>
-			<div class="relative flex h-full w-[320px] flex-col items-center justify-center gap-2">
-				<div
-					class="font-sharpie mb-4 w-full cursor-pointer text-center text-4xl text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
-					on:click={() => handleNavClick('sandbox')}
-					on:keydown={(e) => e.key === 'Enter' && handleNavClick('sandbox')}
-					role="button"
-					tabindex="0"
-					aria-label="Activate SANDBOX section"
-					class:border-b-2={activeSection === 'sandbox'}
-					class:border-white={activeSection === 'sandbox'}
-					class:pb-2={activeSection === 'sandbox'}
+	<!-- Navigation/Header -->
+	<header class="w-full z-30 px-0 pt-0">
+		{#if !isMobile}
+			<div class="flex items-center justify-between w-full px-8 py-4">
+				<!-- Portfolio Navigation (Left Side) -->
+				<HandDrawnCircleBorder
+					isVisible={activeSection === 'portfolio'}
+					isActive={activeSection === 'portfolio'}
+					animateOnHover={false}
 				>
-					SANDBOX
-				</div>
-				<div
-					class="flex w-full flex-col items-center gap-2 transition-all duration-500"
-					style="min-height: 220px; justify-content: flex-start;"
-				>
+					<div
+						class="font-sharpie cursor-pointer px-6 py-4 text-2xl text-white transition-all transition-transform duration-300 ease-out hover:scale-105 hover:opacity-80"
+						on:click={() => handleNavClick('portfolio')}
+						on:keydown={(e) => e.key === 'Enter' && handleNavClick('portfolio')}
+						role="button"
+						tabindex="0"
+						aria-label="Switch to PORTFOLIO section"
+						class:opacity-50={activeSection !== 'portfolio'}
+					>
+						PORTFOLIO: WIP
+					</div>
+				</HandDrawnCircleBorder>
+
+				<!-- Sandbox Navigation (Right Side) -->
+				<div class="relative flex items-center">
+					<HandDrawnSquareBorder
+						isVisible={false}
+						isActive={false}
+						animateOnHover={false}
+					>
+						<div
+							class="font-sharpie cursor-pointer px-6 py-4 text-2xl text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
+							on:click={() => showSandboxSubnav = !showSandboxSubnav}
+							on:keydown={(e) => e.key === 'Enter' && (showSandboxSubnav = !showSandboxSubnav)}
+							role="button"
+							tabindex="0"
+							aria-label="Open SANDBOX subnav"
+						>
+							SANDBOX
+						</div>
+					</HandDrawnSquareBorder>
 					{#if showSandboxSubnav}
-						<div transition:slide={{ duration: 350 }} class="flex w-full flex-col items-center">
-							{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'threejs', label: 'THREE.JS' }, { key: 'shaders', label: 'SHADERS' }, { key: 'physics', label: 'PHYSICS', href: '/physics-standalone' }, { key: 'ai', label: 'AI' }] as item}
-								<AnimatedBottomBorder isActive={activeSubNav === item.key}>
-									{#if item.href}
-										<a
-											href={item.href}
-											target="_blank"
-											rel="noopener noreferrer"
-											class="font-sharpie cursor-pointer px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
-											class:opacity-50={activeSubNav !== item.key}
-										>
-											{item.label}
-										</a>
-									{:else}
-										<div
-											class="font-sharpie cursor-pointer px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
-											on:click={() => {
-												handleNavClick('sandbox');
-												activeSubNav = item.key;
-											}}
-											on:keydown={(e) =>
-												e.key === 'Enter' &&
-												(handleNavClick('sandbox'), (activeSubNav = item.key))}
-											role="button"
-											tabindex="0"
-											aria-label={`Switch to ${item.label} sandbox`}
-											class:opacity-50={activeSubNav !== item.key}
-										>
-											{item.label}
-										</div>
-									{/if}
-								</AnimatedBottomBorder>
-							{/each}
+						<!-- Sandbox Subnav Overlay -->
+						<div class="fixed top-20 right-8 z-50 w-[340px]" style="pointer-events:auto;">
+							<HandDrawnSquareBorder isVisible={true} isActive={true} animateOnHover={false}>
+								<div class="flex flex-col items-center w-full">
+									<div class="font-sharpie text-4xl text-white text-center py-2">SANDBOX</div>
+									<!-- Handdrawn Divider -->
+									<svg width="90%" height="12" class="my-2" style="display:block;" viewBox="0 0 300 12"><path d="M2 8 Q60 2 150 6 Q240 12 298 6" stroke="white" stroke-width="3" fill="none"/></svg>
+									<div class="flex flex-col w-full gap-2 pb-2">
+										{#each [
+											{ key: 'canvas', label: 'CANVAS' },
+											{ key: 'physics', label: 'ORBITAL PHYSICS' },
+											{ key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }
+										] as item}
+											<div
+												class="font-sharpie block w-full px-4 py-2 text-center text-lg text-white transition-all duration-300 ease-out hover:bg-white hover:text-black cursor-pointer"
+												on:click={() => {
+													activeSection = 'sandbox';
+													activeSubNav = item.key;
+													showSandboxSubnav = false;
+												}}
+											>
+												{item.label}
+											</div>
+										{/each}
+									</div>
+								</div>
+							</HandDrawnSquareBorder>
 						</div>
 					{/if}
 				</div>
 			</div>
-		</HandDrawnSquareBorder>
-	</div>
+		{:else}
+			<!-- Mobile Navigation -->
+			<div class="fixed top-0 left-0 right-0 z-50 bg-black bg-opacity-90 backdrop-blur-sm border-b border-white">
+				<div class="flex items-center justify-between p-4">
+					<!-- Portfolio Button -->
+					<button
+						class="font-sharpie text-lg text-white transition-all duration-200"
+						class:opacity-50={activeSection !== 'portfolio'}
+						on:click={() => handleNavClick('portfolio')}
+					>
+						PORTFOLIO
+					</button>
+
+					<!-- Sandbox Button -->
+					<button
+						class="font-sharpie text-lg text-white transition-all duration-200"
+						class:opacity-50={activeSection !== 'sandbox'}
+						on:click={() => handleNavClick('sandbox')}
+					>
+						SANDBOX
+					</button>
+				</div>
+
+				<!-- Mobile Menu -->
+				{#if showMobileMenu}
+					<div transition:slide={{ duration: 300 }} class="border-t border-white bg-black bg-opacity-95">
+						<div class="p-4 space-y-2">
+							{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'physics', label: 'ORBITAL PHYSICS', href: '/physics-standalone' }, { key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }] as item}
+								{#if item.href}
+									<a
+										href={item.href}
+										target="_blank"
+										rel="noopener noreferrer"
+										class="font-sharpie block w-full text-left px-4 py-3 text-white transition-all duration-200 hover:bg-white hover:text-black"
+									>
+										{item.label}
+									</a>
+								{:else}
+									<button
+										class="font-sharpie block w-full text-left px-4 py-3 text-white transition-all duration-200 hover:bg-white hover:text-black"
+										class:bg-white={activeSubNav === item.key}
+										class:text-black={activeSubNav === item.key}
+										on:click={() => handleMobileSubNavClick(item.key)}
+									>
+										{item.label}
+									</button>
+								{/if}
+							{/each}
+						</div>
+					</div>
+				{/if}
+			</div>
+		{/if}
+	</header>
 
 	<!-- Content Area -->
 	{#if activeSection === 'portfolio'}
-		<slot />
+		<div class={isMobile ? 'pt-16' : 'pt-2'}>
+			<slot />
+		</div>
 	{:else if activeSection === 'sandbox'}
-		<div class="font-sharpie flex min-h-screen items-center justify-center p-4">
-			<div class="relative aspect-[4/3] max-h-[85vh] min-h-[500px] w-full max-w-[1440px]">
+		<div class="font-sharpie flex min-h-screen items-center justify-center p-4 {isMobile ? 'pt-16' : 'pt-2'}">
+			<div class="relative w-full max-w-[1440px] {!isMobile ? 'aspect-[4/3] min-h-[500px] max-h-[85vh]' : ''}">
 				{#if activeSubNav === 'canvas'}
 					<CanvasSandbox />
+				{:else if activeSubNav === 'micro-interaction-one'}
+					<MicroInteractionOne />
 				{:else}
-					<div class="font-sharpie flex h-full items-center justify-center text-4xl text-white">
-						{#if activeSubNav === 'threejs'}
-							THREE.JS SANDBOX
-						{:else if activeSubNav === 'shaders'}
-							SHADERS SANDBOX
-						{:else if activeSubNav === 'ai'}
-							AI SANDBOX
-						{:else}
-							SANDBOX CONTENT COMING SOON
-						{/if}
+					<div class="font-sharpie flex h-full items-center justify-center text-4xl text-white {isMobile ? 'text-2xl' : ''}">
+						SANDBOX CONTENT COMING SOON
 					</div>
 				{/if}
 			</div>
@@ -161,5 +224,12 @@
 <style>
 	.font-sharpie {
 		font-family: 'Permanent Marker', cursive;
+	}
+	@keyframes fade-in {
+		from { opacity: 0; transform: translateY(-10px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	.animate-fade-in {
+		animation: fade-in 0.2s ease;
 	}
 </style>

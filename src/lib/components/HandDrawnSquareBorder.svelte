@@ -7,6 +7,7 @@
 	export let animateOnHover = true;
 	export let size: 'sm' | 'md' | 'lg' = 'md';
 	export let showSubNav = false;
+	export let background: string | null = null;
 
 	let container: HTMLDivElement;
 	let svg: SVGElement;
@@ -186,6 +187,8 @@
 <div
 	bind:this={container}
 	class="relative inline-block py-4 text-2xl"
+	class:bg-black={background === 'black'}
+	style={background && background !== 'black' ? `background: ${background}` : ''}
 	on:mouseenter={handleMouseEnter}
 	on:mouseleave={handleMouseLeave}
 >

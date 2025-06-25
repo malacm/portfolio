@@ -11,7 +11,8 @@
 		{ key: 'threejs', label: 'THREE.JS' },
 		{ key: 'shaders', label: 'SHADERS' },
 		{ key: 'physics', label: 'PHYSICS' },
-		{ key: 'ai', label: 'AI' }
+		{ key: 'ai', label: 'AI' },
+		{ key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }
 	];
 
 	function handleSubNavClick(key: string) {

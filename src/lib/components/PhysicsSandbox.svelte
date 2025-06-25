@@ -7,6 +7,7 @@
 	let camera: THREE.PerspectiveCamera;
 	let renderer: THREE.WebGLRenderer;
 	let animationId: number;
+	let isMobile = false;
 
 	// Orbital objects
 	let centralMass: THREE.Mesh;
@@ -59,6 +60,11 @@
 	};
 
 	onMount(() => {
+		checkMobile();
+		window.addEventListener('resize', checkMobile);
+		
+		if (isMobile) return; // Don't initialize Three.js on mobile
+		
 		if (!container) return;
 
 		initThreeJS();
@@ -83,6 +89,10 @@
 			cleanup();
 		};
 	});
+
+	function checkMobile() {
+		isMobile = window.innerWidth < 768;
+	}
 
 	function initThreeJS() {
 		scene = new THREE.Scene();
@@ -484,85 +494,100 @@
 </script>
 
 <div class="relative h-full w-full">
-	<!-- Three.js Canvas -->
-	<div bind:this={container} class="w-full h-full">
-		<!-- Title -->
-		<div class="font-sharpie absolute top-4 left-1/2 transform -translate-x-1/2 text-center text-3xl text-white z-10">
-			ORBITAL PHYSICS SANDBOX
-		</div>
-
-		<!-- Controls -->
-		<div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-wrap items-center justify-center gap-4 z-10">
-			<!-- Actions -->
-			<div class="flex flex-col items-center gap-2">
-				<div class="font-sharpie text-sm text-white">ACTIONS</div>
-				<div class="flex gap-2">
-					<button
-						class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black"
-						on:click={addOrbitalObject}
-					>
-						ADD OBJECT
-					</button>
-					<button
-						class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black"
-						on:click={clearObjects}
-					>
-						CLEAR
-					</button>
+	{#if isMobile}
+		<!-- Mobile Message -->
+		<div class="flex h-full w-full items-center justify-center">
+			<div class="text-center">
+				<div class="font-sharpie text-2xl text-white mb-4">DESKTOP ONLY</div>
+				<div class="font-sharpie text-sm text-white opacity-70">
+					This interactive physics sandbox requires a larger screen and mouse interactions.
 				</div>
-			</div>
-
-			<!-- Instructions -->
-			<div class="flex flex-col items-center gap-2">
-				<div class="font-sharpie text-sm text-white">CONTROLS</div>
-				<div class="font-sharpie text-xs text-white text-center">
-					Hover objects to pause and highlight similar shapes
+				<div class="font-sharpie text-xs text-white opacity-50 mt-2">
+					Please visit on desktop to experience the full orbital physics simulation.
 				</div>
 			</div>
 		</div>
+	{:else}
+		<!-- Three.js Canvas -->
+		<div bind:this={container} class="w-full h-full">
+			<!-- Title -->
+			<div class="font-sharpie absolute top-4 left-1/2 transform -translate-x-1/2 text-center text-3xl text-white z-10">
+				ORBITAL PHYSICS SANDBOX
+			</div>
 
-		<!-- FPS Display -->
-		<div class="font-sharpie absolute top-16 left-4 text-sm text-white z-10">
-			FPS: {fps} | Objects: {orbitalObjects.length}/{maxObjects}
-		</div>
-		
-		<!-- Performance Warning -->
-		{#if performanceWarning}
-			<div class="font-sharpie absolute top-28 left-4 text-sm text-red-400 z-10">
-				MAX OBJECTS REACHED
-			</div>
-		{/if}
-		
-		<!-- Hover Info -->
-		{#if hoveredType}
-			<div class="font-sharpie absolute top-16 right-4 text-sm text-white z-10">
-				Hovering: {hoveredType.toUpperCase()}
-			</div>
-		{/if}
+			<!-- Controls -->
+			<div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex flex-wrap items-center justify-center gap-4 z-10">
+				<!-- Actions -->
+				<div class="flex flex-col items-center gap-2">
+					<div class="font-sharpie text-sm text-white">ACTIONS</div>
+					<div class="flex gap-2">
+						<button
+							class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black"
+							on:click={addOrbitalObject}
+						>
+							ADD OBJECT
+						</button>
+						<button
+							class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black"
+							on:click={clearObjects}
+						>
+							CLEAR
+						</button>
+					</div>
+				</div>
 
-		<!-- Shape Legend -->
-		<div class="font-sharpie absolute top-4 right-4 text-sm text-white z-10 bg-black bg-opacity-50 p-3 rounded">
-			<div class="text-center mb-2">SHAPES</div>
-			<div class="space-y-1">
-				<div class="flex justify-between">
-					<span>● Circles:</span>
-					<span>{shapeCounts.circle}</span>
+				<!-- Instructions -->
+				<div class="flex flex-col items-center gap-2">
+					<div class="font-sharpie text-sm text-white">CONTROLS</div>
+					<div class="font-sharpie text-xs text-white text-center">
+						Hover objects to pause and highlight similar shapes
+					</div>
 				</div>
-				<div class="flex justify-between">
-					<span>■ Squares:</span>
-					<span>{shapeCounts.square}</span>
+			</div>
+
+			<!-- FPS Display -->
+			<div class="font-sharpie absolute top-16 left-4 text-sm text-white z-10">
+				FPS: {fps} | Objects: {orbitalObjects.length}/{maxObjects}
+			</div>
+			
+			<!-- Performance Warning -->
+			{#if performanceWarning}
+				<div class="font-sharpie absolute top-28 left-4 text-sm text-red-400 z-10">
+					MAX OBJECTS REACHED
 				</div>
-				<div class="flex justify-between">
-					<span>✕ X's:</span>
-					<span>{shapeCounts.x}</span>
+			{/if}
+			
+			<!-- Hover Info -->
+			{#if hoveredType}
+				<div class="font-sharpie absolute top-16 right-4 text-sm text-white z-10">
+					Hovering: {hoveredType.toUpperCase()}
 				</div>
-				<div class="flex justify-between">
-					<span>▲ Triangles:</span>
-					<span>{shapeCounts.triangle}</span>
+			{/if}
+
+			<!-- Shape Legend -->
+			<div class="font-sharpie absolute top-4 right-4 text-sm text-white z-10 bg-black bg-opacity-50 p-3 rounded">
+				<div class="text-center mb-2">SHAPES</div>
+				<div class="space-y-1">
+					<div class="flex justify-between">
+						<span>● Circles:</span>
+						<span>{shapeCounts.circle}</span>
+					</div>
+					<div class="flex justify-between">
+						<span>■ Squares:</span>
+						<span>{shapeCounts.square}</span>
+					</div>
+					<div class="flex justify-between">
+						<span>✕ X's:</span>
+						<span>{shapeCounts.x}</span>
+					</div>
+					<div class="flex justify-between">
+						<span>▲ Triangles:</span>
+						<span>{shapeCounts.triangle}</span>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
+	{/if}
 </div>
 
 <style>

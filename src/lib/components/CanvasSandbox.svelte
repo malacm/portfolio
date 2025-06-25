@@ -7,6 +7,7 @@
 	let isDrawing = false;
 	let lastX = 0;
 	let lastY = 0;
+	let isMobile = false;
 
 	// Drawing state
 	let currentTool: 'pen' | 'brush' | 'eraser' | 'spray' = 'pen';
@@ -39,6 +40,7 @@
 	const sizes = [1, 3, 5, 8, 12, 16, 20];
 
 	onMount(() => {
+		checkMobile();
 		updateCanvasSize();
 		ctx = canvas.getContext('2d')!;
 		ctx.fillStyle = '#000000';
@@ -61,7 +63,14 @@
 				resizeObserver.disconnect();
 			};
 		}
+
+		window.addEventListener('resize', checkMobile);
+		return () => window.removeEventListener('resize', checkMobile);
 	});
+
+	function checkMobile() {
+		isMobile = window.innerWidth < 768;
+	}
 
 	function updateCanvasSize() {
 		if (container) {
@@ -82,19 +91,38 @@
 		}
 	}
 
-	function startDrawing(e: MouseEvent) {
-		isDrawing = true;
+	function getEventCoordinates(e: MouseEvent | any): { x: number; y: number } {
 		const rect = canvas.getBoundingClientRect();
-		lastX = e.clientX - rect.left;
-		lastY = e.clientY - rect.top;
+		let clientX: number, clientY: number;
+
+		// Check if it's a touch event by looking for touches property
+		if (e.touches && e.touches.length > 0) {
+			clientX = e.touches[0].clientX;
+			clientY = e.touches[0].clientY;
+		} else {
+			clientX = e.clientX;
+			clientY = e.clientY;
+		}
+
+		return {
+			x: clientX - rect.left,
+			y: clientY - rect.top
+		};
 	}
 
-	function draw(e: MouseEvent) {
+	function startDrawing(e: MouseEvent | any) {
+		isDrawing = true;
+		const coords = getEventCoordinates(e);
+		lastX = coords.x;
+		lastY = coords.y;
+	}
+
+	function draw(e: MouseEvent | any) {
 		if (!isDrawing) return;
 
-		const rect = canvas.getBoundingClientRect();
-		const x = e.clientX - rect.left;
-		const y = e.clientY - rect.top;
+		const coords = getEventCoordinates(e);
+		const x = coords.x;
+		const y = coords.y;
 
 		switch (currentTool) {
 			case 'pen':
@@ -193,25 +221,25 @@
 	}
 </script>
 
-<div class="flex h-full w-full flex-col items-center justify-center gap-6 p-4">
+<div class="flex h-full w-full flex-col items-center justify-center gap-6 p-4 {isMobile ? 'gap-4 p-2' : ''}">
 	<!-- Title -->
-	<div class="font-sharpie text-center text-3xl text-white">
+	<div class="font-sharpie text-center text-3xl text-white {isMobile ? 'text-2xl' : ''}">
 		CANVAS SANDBOX
 	</div>
 
 	<!-- Controls -->
-	<div class="flex flex-wrap items-center justify-center gap-4">
+	<div class="flex flex-wrap items-center justify-center gap-4 {isMobile ? 'gap-2' : ''}">
 		<!-- Tools -->
 		<div class="flex flex-col items-center gap-2">
-			<div class="font-sharpie text-sm text-white">TOOLS</div>
-			<div class="flex gap-2">
+			<div class="font-sharpie text-sm text-white {isMobile ? 'text-xs' : ''}">TOOLS</div>
+			<div class="flex gap-2 {isMobile ? 'gap-1' : ''}">
 				{#each tools as tool}
 					<button
-						class="font-sharpie flex h-12 w-12 items-center justify-center rounded border-2 border-white bg-black text-white transition-all duration-200 hover:bg-white hover:text-black {currentTool === tool.id ? 'bg-white text-black' : ''}"
+						class="font-sharpie flex items-center justify-center rounded border-2 border-white bg-black text-white transition-all duration-200 hover:bg-white hover:text-black {currentTool === tool.id ? 'bg-white text-black' : ''} {isMobile ? 'h-10 w-10' : 'h-12 w-12'}"
 						on:click={() => setTool(tool.id as typeof currentTool)}
 						title={tool.label}
 					>
-						<span class="text-lg">{tool.icon}</span>
+						<span class="{isMobile ? 'text-sm' : 'text-lg'}">{tool.icon}</span>
 					</button>
 				{/each}
 			</div>
@@ -219,11 +247,11 @@
 
 		<!-- Colors -->
 		<div class="flex flex-col items-center gap-2">
-			<div class="font-sharpie text-sm text-white">COLORS</div>
-			<div class="flex gap-2">
+			<div class="font-sharpie text-sm text-white {isMobile ? 'text-xs' : ''}">COLORS</div>
+			<div class="flex gap-2 {isMobile ? 'gap-1' : ''}">
 				{#each colors as color}
 					<button
-						class="h-8 w-8 rounded border-2 border-white transition-all duration-200 hover:scale-110 {currentColor === color ? 'scale-110 border-2' : ''}"
+						class="rounded border-2 border-white transition-all duration-200 hover:scale-110 {currentColor === color ? 'scale-110 border-2' : ''} {isMobile ? 'h-6 w-6' : 'h-8 w-8'}"
 						style="background-color: {color}"
 						on:click={() => setColor(color)}
 						title={color}
@@ -234,11 +262,11 @@
 
 		<!-- Size -->
 		<div class="flex flex-col items-center gap-2">
-			<div class="font-sharpie text-sm text-white">SIZE</div>
-			<div class="flex gap-2">
-				{#each sizes as size}
+			<div class="font-sharpie text-sm text-white {isMobile ? 'text-xs' : ''}">SIZE</div>
+			<div class="flex gap-2 {isMobile ? 'gap-1' : ''}">
+				{#each sizes.slice(0, isMobile ? 4 : sizes.length) as size}
 					<button
-						class="font-sharpie flex h-8 w-8 items-center justify-center rounded border-2 border-white bg-black text-xs text-white transition-all duration-200 hover:bg-white hover:text-black {currentSize === size ? 'bg-white text-black' : ''}"
+						class="font-sharpie flex items-center justify-center rounded border-2 border-white bg-black text-white transition-all duration-200 hover:bg-white hover:text-black {currentSize === size ? 'bg-white text-black' : ''} {isMobile ? 'h-6 w-6 text-xs' : 'h-8 w-8 text-xs'}"
 						on:click={() => setSize(size)}
 						title="Size {size}"
 					>
@@ -250,16 +278,16 @@
 
 		<!-- Actions -->
 		<div class="flex flex-col items-center gap-2">
-			<div class="font-sharpie text-sm text-white">ACTIONS</div>
-			<div class="flex gap-2">
+			<div class="font-sharpie text-sm text-white {isMobile ? 'text-xs' : ''}">ACTIONS</div>
+			<div class="flex gap-2 {isMobile ? 'gap-1' : ''}">
 				<button
-					class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black"
+					class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black {isMobile ? 'px-2 py-1 text-xs' : ''}"
 					on:click={clearCanvas}
 				>
 					CLEAR
 				</button>
 				<button
-					class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black"
+					class="font-sharpie rounded border-2 border-white bg-black px-4 py-2 text-sm text-white transition-all duration-200 hover:bg-white hover:text-black {isMobile ? 'px-2 py-1 text-xs' : ''}"
 					on:click={downloadCanvas}
 				>
 					SAVE
@@ -280,10 +308,14 @@
 				on:mousemove={draw}
 				on:mouseup={stopDrawing}
 				on:mouseleave={stopDrawing}
+				on:touchstart|preventDefault={startDrawing}
+				on:touchmove|preventDefault={draw}
+				on:touchend|preventDefault={stopDrawing}
+				style="touch-action: none;"
 			/>
 			<!-- Instructions overlay -->
-			<div class="font-sharpie absolute bottom-4 left-4 text-sm text-white opacity-70">
-				Click and drag to draw • Use tools above to change drawing style
+			<div class="font-sharpie absolute bottom-4 left-4 text-sm text-white opacity-70 {isMobile ? 'text-xs bottom-2 left-2' : ''}">
+				{isMobile ? 'Touch and drag to draw' : 'Click and drag to draw'} • Use tools above to change drawing style
 			</div>
 		</div>
 	</HandDrawnBorder>
