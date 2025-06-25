@@ -4,7 +4,7 @@
 	import HandDrawnBorder from './HandDrawnBorder.svelte';
 	import { onMount } from 'svelte';
 
-	let activePage: string = 'Projects';
+	let activePage: string = 'About';
 	let isMobile = false;
 
 	onMount(() => {
@@ -22,8 +22,8 @@
 		activePage = page;
 	}
 
-	$: notebookWidth = isMobile ? '100vw' : '85vw';
-	$: notebookHeight = isMobile ? '100dvh' : '75vh';
+	$: notebookWidth = isMobile ? '95vw' : '80vw';
+	$: notebookHeight = isMobile ? '90dvh' : '70vh';
 	$: showFixedBottomNav = isMobile;
 </script>
 
@@ -44,7 +44,7 @@
 
 {#if showFixedBottomNav}
 	<div class="fixed bottom-0 left-0 right-0 w-full z-[9999]">
-		<HandDrawnBorder height="80px" width="100vw">
+		<HandDrawnBorder height="70px" width="95vw">
 			<div class="w-full h-full bg-black">
 				<SideNavTabs on:tabClick={(e) => handleTabClick(e.detail)} {activePage} isFixedBottom={true} />
 			</div>

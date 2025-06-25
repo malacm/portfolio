@@ -23,21 +23,22 @@
 		const containerHeight = Math.round(rect.height);
 		
 		if (containerWidth === 0 || containerHeight === 0) return;
-		
-		const padding = strokeWidth / 2;
-		
-		// Update SVG to match container
-		svgEl.setAttribute('width', `${containerWidth}`);
-		svgEl.setAttribute('height', `${containerHeight}`);
+
+		const buffer = 12; // Larger buffer to avoid missing corners/sides
+		const inset = 6; // Inset rectangle from each edge
+
+		// Update SVG to match container, plus buffer
+		svgEl.setAttribute('width', `${containerWidth + buffer}`);
+		svgEl.setAttribute('height', `${containerHeight + buffer}`);
 		svgEl.innerHTML = '';
-		
+
 		const rc = rough.svg(svgEl);
 		rc.seed = 12345; // Fixed seed for consistent border
 		const drawing = rc.rectangle(
-			padding,
-			padding,
-			containerWidth - strokeWidth,
-			containerHeight - strokeWidth,
+			inset,
+			inset,
+			containerWidth - 2 * inset + buffer,
+			containerHeight - 2 * inset + buffer,
 			{
 				stroke: '#fff',
 				strokeWidth: strokeWidth,
@@ -75,12 +76,13 @@
 	<!-- Sketchy Border SVG -->
 	<svg
 		bind:this={svgEl}
-		class="pointer-events-none absolute inset-0 z-10 h-full w-full"
-		style="display:block;"
+		class="pointer-events-none absolute z-10"
+		style="display:block; top: -6px; left: -6px; right: 0; bottom: 0; width: calc(100% + 12px); height: calc(100% + 12px);"
 	/>
 	<!-- Content slot -->
 	<div 
 		class="relative z-20 {hasFixedHeight ? 'h-full w-full' : 'p-4'}"
+		style="padding: 0.5rem;"
 	>
 		<slot />
 	</div>
