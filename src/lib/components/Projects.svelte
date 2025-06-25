@@ -43,13 +43,13 @@
 	}
 </script>
 
-<div class="flex flex-col w-full max-w-4xl gap-8 text-white px-6 py-8 sm:px-4 sm:py-6">
+<div class="flex flex-col w-full h-full gap-8 text-white px-6 py-8 sm:px-4 sm:py-6">
 	<!-- Header -->
 	<div class="w-full">
 		<HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
 			<div class="p-6 pl-10 sm:p-4 sm:pl-4">
 				<h1 class="font-sharpie mb-2 text-3xl sm:text-2xl">Selected Projects</h1>
-				<p class="text-base sm:text-sm">
+				<p class="text-base sm:text-sm font-sharpie">
 					A collection of creative experiments and client work that showcase my approach to building expressive web experiences.
 				</p>
 			</div>
@@ -81,7 +81,7 @@
 						</div>
 
 						<!-- Project Description -->
-						<p class="text-sm leading-relaxed">
+						<p class="text-sm leading-relaxed font-sharpie">
 							{project.description}
 						</p>
 
