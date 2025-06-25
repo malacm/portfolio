@@ -5,49 +5,47 @@
 	export let strokeWidth: number = 2.5;
 	export let roughness: number = 2.2;
 	export let width: string = '100%';
-	export let height: string = '100%';
+	export let height: string = 'auto';
+	export let isNotebookContainer: boolean = false;
 
 	let svgEl: SVGElement;
 	let containerEl: HTMLDivElement;
 	let resizeObserver: ResizeObserver | undefined;
 
+	// Check if height is a specific value (not 'auto' or '100%')
+	$: hasFixedHeight = height !== 'auto' && height !== '100%';
+
 	function updateSVGSize() {
-		if (svgEl && containerEl) {
-			const rect = containerEl.getBoundingClientRect();
-			// Use Math.round to avoid subpixel gaps
-			const roundedWidth = Math.round(rect.width);
-			const roundedHeight = Math.round(rect.height);
-			if (roundedWidth === 0 || roundedHeight === 0) return;
-
-			const padding = strokeWidth / 2;
-			
-			// Calculate 10% smaller dimensions for the inner rectangle
-			const innerWidth = roundedWidth * 0.9;
-			const innerHeight = roundedHeight * 0.9;
-			
-			// Calculate centering offsets
-			const offsetX = (roundedWidth - innerWidth) / 2;
-			const offsetY = (roundedHeight - innerHeight) / 2;
-
-			svgEl.setAttribute('width', `${roundedWidth}`);
-			svgEl.setAttribute('height', `${roundedHeight}`);
-			svgEl.innerHTML = '';
-			const rc = rough.svg(svgEl);
-			rc.seed = 12345; // Fixed seed for consistent border
-			const drawing = rc.rectangle(
-				offsetX + padding,
-				offsetY + padding,
-				innerWidth - strokeWidth + 1, // +1 to ensure coverage
-				innerHeight - strokeWidth + 1,
-				{
-					stroke: '#fff',
-					strokeWidth: strokeWidth,
-					roughness: roughness,
-					fillStyle: 'solid'
-				}
-			);
-			svgEl.appendChild(drawing);
-		}
+		if (!svgEl || !containerEl) return;
+		
+		const rect = containerEl.getBoundingClientRect();
+		const containerWidth = Math.round(rect.width);
+		const containerHeight = Math.round(rect.height);
+		
+		if (containerWidth === 0 || containerHeight === 0) return;
+		
+		const padding = strokeWidth / 2;
+		
+		// Update SVG to match container
+		svgEl.setAttribute('width', `${containerWidth}`);
+		svgEl.setAttribute('height', `${containerHeight}`);
+		svgEl.innerHTML = '';
+		
+		const rc = rough.svg(svgEl);
+		rc.seed = 12345; // Fixed seed for consistent border
+		const drawing = rc.rectangle(
+			padding,
+			padding,
+			containerWidth - strokeWidth,
+			containerHeight - strokeWidth,
+			{
+				stroke: '#fff',
+				strokeWidth: strokeWidth,
+				roughness: roughness,
+				fillStyle: 'solid'
+			}
+		);
+		svgEl.appendChild(drawing);
 	}
 
 	onMount(() => {
@@ -57,8 +55,8 @@
 				updateSVGSize();
 			});
 			resizeObserver.observe(containerEl);
-			// Initial draw (in case size is already set)
-			updateSVGSize();
+			// Initial draw after a small delay to ensure content is rendered
+			setTimeout(updateSVGSize, 10);
 		}
 	});
 
@@ -71,8 +69,8 @@
 
 <div 
 	bind:this={containerEl} 
-	class="relative h-full w-full max-w-[1440px]"
-	style="width: {width}; height: {height};"
+	class="relative {hasFixedHeight ? 'h-full w-full' : 'w-full'}"
+	style="width: {width}; {hasFixedHeight ? `height: ${height};` : ''} {isNotebookContainer ? 'max-width: 100%; max-height: 100%;' : ''}"
 >
 	<!-- Sketchy Border SVG -->
 	<svg
@@ -82,13 +80,7 @@
 	/>
 	<!-- Content slot -->
 	<div 
-		class="relative z-20 absolute"
-		style="
-			width: calc(90% - {strokeWidth}px); 
-			height: calc(90% - {strokeWidth}px);
-			top: calc(5% + {strokeWidth/2}px);
-			left: calc(5% + {strokeWidth/2}px);
-		"
+		class="relative z-20 {hasFixedHeight ? 'h-full w-full' : 'p-4'}"
 	>
 		<slot />
 	</div>
