@@ -110,10 +110,10 @@ function checkMobile() {
 }
 </script>
 
-<div class="flex flex-col w-full h-full gap-8 text-white px-6 py-8 sm:px-4 sm:py-6">
+<div class="flex flex-col w-full h-full gap-8 text-white px-1 py-2 sm:px-4 sm:py-6">
   <!-- Header -->
   <div class="w-full">
-      <div class="p-6 pl-10 sm:p-4 sm:pl-4">
+      <div class="p-1 pl-1 sm:p-4 sm:pl-4">
         <h1 class="font-sharpie mb-2 text-3xl sm:text-2xl">Experience</h1>
         <p class="text-base sm:text-sm font-sharpie">A summary of my professional journey, leadership, and creative roles.</p>
       </div>
@@ -124,7 +124,7 @@ function checkMobile() {
     {#each experiences as exp}
       <div class="relative w-full">
         <HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
-          <div class="p-6 pl-10 sm:p-2 sm:pl-2">
+          <div class="p-1 pl-1 sm:p-2 sm:pl-2">
             <div class="mb-2 flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
               <h2 class="font-sharpie text-2xl sm:text-xl">{exp.title}</h2>
               <span class="rounded-full bg-white/10 px-3 py-1 font-sharpie text-base sm:text-sm">{exp.company}</span>

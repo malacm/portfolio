@@ -71,6 +71,12 @@
 		overflow: auto;
 		padding: 2rem;
 	}
+
+	@media (max-width: 767px) {
+		.page-content-scroll {
+			padding: 0;
+		}
+	}
 	.side-nav {
 		width: 8rem;
 		flex-shrink: 0;
