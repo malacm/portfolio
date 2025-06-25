@@ -184,7 +184,7 @@
 	{#if !isMobile && showSandboxDrawer}
 		<!-- Drawer (no overlay, no square border) -->
 		<div
-			class="fixed top-20 right-8 z-50 w-[400px] rounded-lg border bg-black shadow-lg"
+			class="fixed top-20 right-8 z-50 w-[400px] rounded-lg border h-full bg-black shadow-lg"
 			transition:slide={{ duration: 300, axis: 'x' }}
 		>
 			<div class="flex flex-col">

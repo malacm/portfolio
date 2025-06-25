@@ -11,6 +11,7 @@
 	let peaceText: HTMLDivElement;
 	let punkPeaceText: HTMLDivElement;
 	let isMobile = false;
+	let textContainer: HTMLDivElement;
 
 	const punkSubtitles = [
 		'take risk • push boundaries • chaotic good 4ever',
@@ -755,7 +756,8 @@
 	<div class="background-effect" bind:this={bgEffect}></div>
 	<div class="container">
 		<div class="title">ZERO STUDIOS PHILOSOPHY</div>
-		<div class="toggle-container">
+		<div class="toggle-container" bind:this={textContainer}>
+			<div class="click-me-text">"click ⬇️"</div>
 			<div class="text-container">
 				<div
 					class="punk-text"
@@ -801,6 +803,7 @@
 		<span
 			class="punk-peace-emoji-trigger"
 			on:click={activatePunkPeace}
+			on:keydown={handleKeydown}
 			tabindex="0"
 			role="button"
 			aria-label="Activate PunkPeace mode"
@@ -1147,6 +1150,32 @@
 				0 0 50px rgba(0, 255, 128, 0.4),
 				0 0 75px rgba(0, 255, 128, 0.2);
 			filter: drop-shadow(0 0 15px rgba(0, 255, 128, 0.5));
+		}
+	}
+
+	.click-me-text {
+		position: absolute;
+		top: -2rem;
+		left: 50%;
+		transform: translateX(-50%);
+		font-family: 'Permanent Marker', cursive;
+		font-size: 1.2rem;
+		color: rgba(255, 255, 255, 0.8);
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+		z-index: 3;
+		pointer-events: none;
+		animation: clickMeFloat 3s ease-in-out infinite;
+	}
+
+	@keyframes clickMeFloat {
+		0%, 100% { transform: translateX(-50%) translateY(0px); }
+		50% { transform: translateX(-50%) translateY(-5px); }
+	}
+
+	@media (max-width: 767px) {
+		.click-me-text {
+			font-size: 1rem;
+			top: -1.5rem;
 		}
 	}
 </style>
