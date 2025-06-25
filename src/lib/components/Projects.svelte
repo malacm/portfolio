@@ -7,29 +7,39 @@
 		type: string;
 		role: string;
 		description: string;
+		url: string;
 	}
 
 	const projects: Project[] = [
 		{
-			name: 'Interactive Web Experience',
+			name: '✨ National Geographic Expeditions',
 			type: 'Web Application',
-			role: 'Full Stack Developer',
+			role: 'Lead Frontend Engineer',
 			description:
-				'A playful, interactive web experience built with SvelteKit and Three.js, featuring hand-drawn animations and physics simulations.'
+				'Rebrand and rebuild of the National Geographic Expeditions website with modern web technologies.',
+			url: 'https://www.expeditions.com/?utm_source=google&utm_medium=paidsearch&utm_campaign=G-US-BRAND-Search-Branded_LEX&utm_term=lindblad%20expeditions&utm_content=&device=c&network=g&gad_source=1&gad_campaignid=1839094478&gclid=CjwKCAjwvO7CBhAqEiwA9q2YJUeBjLDSos6BPVhzwp0x90yT1xjCLhAjJglTSpl0yq997sVPJU18axoCCg8QAvD_BwE'
 		},
 		{
-			name: 'Creative Portfolio Platform',
-			type: 'Design System',
-			role: 'Frontend Developer & Designer',
+			name: '✔️ Certifyed',
+			type: 'IOS App and Web Application',
+			role: 'Partner and Architect',
 			description:
-				'A custom portfolio platform showcasing creative work with hand-drawn UI elements and micro-interactions.'
+				'Partner and Architect of Educational technology platform with innovative learning solutions.',
+			url: 'https://certifyde.com/'
 		},
 		{
-			name: 'Experimental Canvas Tool',
-			type: 'Creative Tool',
-			role: 'Creative Developer',
-			description:
-				'A web-based drawing tool that combines Rough.js with custom physics for creating organic, hand-drawn digital art.'
+			name: '🏠 Silo',
+			type: 'Web Application',
+			role: 'Motion Designer',
+			description: 'Frontend development and Motion Design for Silo.',
+			url: 'https://usesilo.com/'
+		},
+		{
+			name: '🎵 Invesco QQQ ETF',
+			type: 'Web Application',
+			role: 'Frontend Developer',
+			description: 'Frontend development for Invesco QQQ ETF. And Creative direction of NCAA collaboration project.',
+			url: 'https://www.invesco.com/qqq-etf/en/home.html'
 		}
 	];
 
@@ -90,9 +100,10 @@
 								View Project →
 							</button>
 							<button
-								class="font-sharpie rounded-full border border-white/20 px-4 py-2 text-sm transition-colors hover:bg-white/10 sm:px-3 sm:py-1"
+								class="font-sharpie rounded-full border border-white/20 px-4 py-2 text-sm transition-colors bg-white/10 text-gray-400 cursor-not-allowed sm:px-3 sm:py-1"
+								disabled
 							>
-								Case Study
+								Coming Soon
 							</button>
 						</div>
 					</div>
