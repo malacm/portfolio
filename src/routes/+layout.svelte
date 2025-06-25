@@ -190,30 +190,42 @@
 			<div class="flex flex-col">
 				<!-- Navigation Items -->
 				<div class="flex flex-1 flex-col px-6">
-					{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'physics', label: 'ORBITAL PHYSICS' }, { key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }] as item}
-						<div
-							class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-right text-xl text-white relative"
-							on:click={() => handleDrawerItemClick(item.key)}
-							style="min-height: 2.5em;"
-						>
-							{item.label}
-							{#if activeSubNav === item.key}
-								<svg
-									width="70%"
-									height="16"
-									viewBox="0 0 300 12"
-									class="absolute right-0 bottom-0"
-									style="display:block; pointer-events:none;"
-								>
-									<path
-										d="M2 8 Q60 2 150 6 Q240 12 298 6"
-										stroke="white"
-										stroke-width="3"
-										fill="none"
-									/>
-								</svg>
-							{/if}
-						</div>
+					{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'physics', label: 'ORBITAL PHYSICS', href: '/physics-standalone' }, { key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }] as item}
+						{#if item.href}
+							<a
+								href={item.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-right text-xl text-white relative"
+								style="min-height: 2.5em;"
+							>
+								{item.label}
+							</a>
+						{:else}
+							<div
+								class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-right text-xl text-white relative"
+								on:click={() => handleDrawerItemClick(item.key)}
+								style="min-height: 2.5em;"
+							>
+								{item.label}
+								{#if activeSubNav === item.key}
+									<svg
+										width="70%"
+										height="16"
+										viewBox="0 0 300 12"
+										class="absolute right-0 bottom-0"
+										style="display:block; pointer-events:none;"
+									>
+										<path
+											d="M2 8 Q60 2 150 6 Q240 12 298 6"
+											stroke="white"
+											stroke-width="3"
+											fill="none"
+										/>
+									</svg>
+								{/if}
+							</div>
+						{/if}
 					{/each}
 				</div>
 			</div>
