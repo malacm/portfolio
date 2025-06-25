@@ -68,6 +68,23 @@ function checkMobile() {
           <span>🧩 Tailwind CSS</span>
           <span>🪶 Rough.js</span>
           <span>🚀 Vercel</span>
+          <span>⚛️ React.js</span>
+          <span>🔗 Next.js</span>
+          <span>📜 JavaScript</span>
+          <span>🔡 TypeScript</span>
+          <span>🟩 Node.js</span>
+          <span>🌐 HTML5</span>
+          <span>🎨 scss</span>
+          <span>🤖 OpenAI Integration</span>
+          <span>🧬 AI/ML Technologies</span>
+          <span>🦾 LLM Implementation</span>
+          <span>💡 Prompt Engineering</span>
+          <span>🔧 Git</span>
+          <span>🐳 Docker</span>
+          <span>☁️ AWS</span>
+          <span>🌥️ Google Cloud</span>
+          <span>🔄 CI/CD</span>
+          <span>📊 Google Analytics</span>
         </div>
       </div>
     </HandDrawnBorder>
