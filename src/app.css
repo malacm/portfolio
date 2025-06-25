@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* Global styles to prevent scrolling and ensure viewport fit */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto;
+}
+
+#svelte {
+  height: 100%;
+}
+
+/* Ensure fonts are properly loaded and applied */
+.font-sharpie {
+  font-family: 'Permanent Marker', cursive !important;
+}
+
+.font-hand {
+  font-family: 'Patrick Hand', cursive !important;
+}
