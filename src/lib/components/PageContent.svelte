@@ -26,7 +26,7 @@
 		<About />
 	{:else if page === 'Projects'}
 		<div class="relative h-full w-full">
-			<div bind:this={projectsContainer} class="h-full w-full overflow-y-auto pr-4">
+			<div bind:this={projectsContainer} class="h-full w-full overflow-y-auto pr-4 scrollbar-hide">
 				<Projects />
 			</div>
 			{#if projectsContainer}
@@ -35,7 +35,7 @@
 		</div>
 	{:else if page === 'Experience'}
 		<div class="relative h-full w-full">
-			<div bind:this={experienceContainer} class="h-full w-full overflow-y-auto pr-4">
+			<div bind:this={experienceContainer} class="h-full w-full overflow-y-auto pr-4 scrollbar-hide">
 				<Experience />
 			</div>
 			{#if experienceContainer}
@@ -44,3 +44,13 @@
 		</div>
 	{/if}
 </div>
+
+<style>
+	.scrollbar-hide {
+		-ms-overflow-style: none;  /* Internet Explorer 10+ */
+		scrollbar-width: none;  /* Firefox */
+	}
+	.scrollbar-hide::-webkit-scrollbar {
+		display: none;  /* Safari and Chrome */
+	}
+</style>
