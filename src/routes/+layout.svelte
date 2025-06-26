@@ -80,7 +80,7 @@
 	}
 </script>
 
-<div class="relative min-h-screen bg-black">
+<div class="relative min-h-screen bg-soft-black">
 	<!-- Navigation/Header -->
 	<header class="z-30 w-full px-0 pt-0">
 		{#if !isMobile}
@@ -92,7 +92,7 @@
 					animateOnHover={false}
 				>
 					<div
-						class="font-sharpie cursor-pointer px-6 py-4 text-2xl text-white transition-all transition-transform duration-300 ease-out hover:scale-105 hover:opacity-80"
+						class="font-sharpie cursor-pointer px-6 py-4 text-3xl text-warm-white transition-all transition-transform duration-300 ease-out hover:scale-105 hover:opacity-80"
 						on:click={() => handleNavClick('portfolio')}
 						on:keydown={(e) => e.key === 'Enter' && handleNavClick('portfolio')}
 						role="button"
@@ -108,7 +108,7 @@
 				<div class="relative flex items-center">
 					<HandDrawnSquareBorder isVisible={false} isActive={false} animateOnHover={false}>
 						<div
-							class="font-sharpie cursor-pointer px-6 py-4 text-2xl text-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
+							class="font-sharpie cursor-pointer px-6 py-4 text-3xl text-warm-white transition-all duration-300 ease-out hover:scale-105 hover:opacity-80"
 							on:click={toggleSandboxDrawer}
 							on:keydown={(e) => e.key === 'Enter' && toggleSandboxDrawer()}
 							role="button"
@@ -123,12 +123,12 @@
 		{:else}
 			<!-- Mobile Navigation -->
 			<div
-				class="bg-opacity-90 fixed top-0 right-0 left-0 z-50 border-b border-white bg-black backdrop-blur-sm"
+				class="bg-opacity-90 fixed top-0 right-0 left-0 z-50 border-b border-medium bg-soft-black backdrop-blur-sm"
 			>
 				<div class="flex items-center justify-between p-4">
 					<!-- Portfolio Button -->
 					<button
-						class="font-sharpie text-lg text-white transition-all duration-200"
+						class="font-sharpie text-xl text-warm-white transition-all duration-200"
 						class:opacity-50={activeSection !== 'portfolio'}
 						on:click={() => handleNavClick('portfolio')}
 					>
@@ -137,7 +137,7 @@
 
 					<!-- Sandbox Button -->
 					<button
-						class="font-sharpie text-lg text-white transition-all duration-200"
+						class="font-sharpie text-xl text-warm-white transition-all duration-200"
 						class:opacity-50={activeSection !== 'sandbox'}
 						on:click={() => handleNavClick('sandbox')}
 					>
@@ -149,7 +149,7 @@
 				{#if showMobileMenu}
 					<div
 						transition:slide={{ duration: 300 }}
-						class="bg-opacity-95 border-t border-white bg-black"
+						class="bg-opacity-95 border-t border-medium bg-soft-black"
 					>
 						<div class="space-y-2 p-4">
 							{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'physics', label: 'ORBITAL PHYSICS', href: '/physics-standalone' }, { key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }] as item}
@@ -158,15 +158,15 @@
 										href={item.href}
 										target="_blank"
 										rel="noopener noreferrer"
-										class="font-sharpie block w-full px-4 py-3 text-left text-white transition-all duration-200 hover:bg-white hover:text-black"
+										class="font-sharpie block w-full px-4 py-3 text-left text-lg text-warm-white transition-all duration-200 hover:bg-medium-bg hover:text-soft-black"
 									>
 										{item.label}
 									</a>
 								{:else}
 									<button
-										class="font-sharpie block w-full px-4 py-3 text-left text-white transition-all duration-200 hover:bg-white hover:text-black"
-										class:bg-white={activeSubNav === item.key}
-										class:text-black={activeSubNav === item.key}
+										class="font-sharpie block w-full px-4 py-3 text-left text-lg text-warm-white transition-all duration-200 hover:bg-medium-bg hover:text-soft-black"
+										class:bg-medium-bg={activeSubNav === item.key}
+										class:text-soft-black={activeSubNav === item.key}
 										on:click={() => handleMobileSubNavClick(item.key)}
 									>
 										{item.label}
@@ -182,28 +182,37 @@
 
 	<!-- Sandbox Drawer (Desktop) -->
 	{#if !isMobile && showSandboxDrawer}
-		<!-- Drawer (no overlay, no square border) -->
 		<div
-			class="fixed top-20 right-8 z-50 w-[400px] rounded-lg border h-full bg-black shadow-lg"
+			class="fixed top-0 right-0 z-50 w-[400px] h-screen border-l border-medium bg-soft-black shadow-lg"
 			transition:slide={{ duration: 300, axis: 'x' }}
 		>
-			<div class="flex flex-col">
-				<!-- Navigation Items -->
-				<div class="flex flex-1 flex-col px-6">
+			<div class="flex flex-col h-full">
+				<!-- Back Arrow Header -->
+				<div class="flex justify-end p-4">
+					<button
+						class="font-sharpie text-2xl text-warm-white hover:opacity-70 transition-opacity duration-200 transform rotate-180 cursor-pointer"
+						on:click={toggleSandboxDrawer}
+						aria-label="Close drawer"
+					>
+						←
+					</button>
+				</div>
+				
+				<div class="flex flex-1 flex-col px-6 justify-center">
 					{#each [{ key: 'canvas', label: 'CANVAS' }, { key: 'physics', label: 'ORBITAL PHYSICS', href: '/physics-standalone' }, { key: 'micro-interaction-one', label: 'MICRO INTERACTION ONE' }] as item}
 						{#if item.href}
 							<a
 								href={item.href}
 								target="_blank"
 								rel="noopener noreferrer"
-								class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-right text-xl text-white relative"
+								class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-center text-2xl text-warm-white relative"
 								style="min-height: 2.5em;"
 							>
 								{item.label}
 							</a>
 						{:else}
 							<div
-								class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-right text-xl text-white relative"
+								class="font-sharpie mb-2 block w-full cursor-pointer px-4 py-4 text-center text-2xl text-warm-white relative"
 								on:click={() => handleDrawerItemClick(item.key)}
 								style="min-height: 2.5em;"
 							>
@@ -213,12 +222,12 @@
 										width="70%"
 										height="16"
 										viewBox="0 0 300 12"
-										class="absolute right-0 bottom-0"
+										class="absolute left-1/2 bottom-0 transform -translate-x-1/2"
 										style="display:block; pointer-events:none;"
 									>
 										<path
 											d="M2 8 Q60 2 150 6 Q240 12 298 6"
-											stroke="white"
+											stroke="var(--warm-white)"
 											stroke-width="3"
 											fill="none"
 										/>
@@ -254,8 +263,8 @@
 					<MicroInteractionOne />
 				{:else}
 					<div
-						class="font-sharpie flex h-full items-center justify-center text-4xl text-white {isMobile
-							? 'text-2xl'
+						class="font-sharpie flex h-full items-center justify-center text-5xl text-warm-white {isMobile
+							? 'text-3xl'
 							: ''}"
 					>
 						SANDBOX CONTENT COMING SOON

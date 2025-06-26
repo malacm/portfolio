@@ -110,12 +110,12 @@ function checkMobile() {
 }
 </script>
 
-<div class="flex flex-col w-full h-full gap-8 text-white px-1 py-2 sm:px-4 sm:py-6">
+<div class="flex flex-col w-full h-full gap-8 text-warm-white px-1 py-2 sm:px-4 sm:py-6">
   <!-- Header -->
   <div class="w-full">
       <div class="p-1 pl-1 sm:p-4 sm:pl-4">
-        <h1 class="font-sharpie mb-2 text-3xl sm:text-2xl">Experience</h1>
-        <p class="text-base sm:text-sm font-sharpie">A summary of my professional journey, leadership, and creative roles.</p>
+        <h1 class="font-sharpie mb-2 text-4xl sm:text-3xl text-soft-white">Experience</h1>
+        <p class="text-lg sm:text-base font-sharpie text-warm-white">A summary of my professional journey, leadership, and creative roles.</p>
       </div>
   </div>
 
@@ -126,20 +126,20 @@ function checkMobile() {
         <HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
           <div class="p-1 pl-1 sm:p-2 sm:pl-2">
             <div class="mb-2 flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
-              <h2 class="font-sharpie text-2xl sm:text-xl">{exp.title}</h2>
-              <span class="rounded-full bg-white/10 px-3 py-1 font-sharpie text-base sm:text-sm">{exp.company}</span>
-              <span class="rounded-full bg-white/10 px-3 py-1 font-sharpie text-base sm:text-sm">{exp.type}</span>
+              <h2 class="font-sharpie text-3xl sm:text-2xl text-soft-white">{exp.title}</h2>
+              <span class="rounded-full bg-medium-bg px-3 py-1 font-sharpie text-lg sm:text-base text-warm-white">{exp.company}</span>
+              <span class="rounded-full bg-medium-bg px-3 py-1 font-sharpie text-lg sm:text-base text-warm-white">{exp.type}</span>
             </div>
-            <div class="mb-2 flex flex-wrap gap-2 text-base text-white/70 font-sharpie">
+            <div class="mb-2 flex flex-wrap gap-2 text-lg text-medium-gray font-sharpie">
               <span>{exp.period}</span>
               <span>•</span>
               <span>{exp.location}</span>
             </div>
             {#if exp.description}
-              <p class="mb-2 text-base leading-relaxed sm:text-base font-sharpie">{exp.description}</p>
+              <p class="mb-2 text-lg leading-relaxed sm:text-base font-sharpie text-warm-white">{exp.description}</p>
             {/if}
             {#if exp.details}
-              <ul class="mb-2 list-inside list-disc text-base leading-loose sm:text-base font-sharpie">
+              <ul class="mb-2 list-inside list-disc text-lg leading-loose sm:text-base font-sharpie text-warm-white">
                 {#each exp.details as detail}
                   <li>{detail}</li>
                 {/each}

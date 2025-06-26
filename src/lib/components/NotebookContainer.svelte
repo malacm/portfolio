@@ -51,7 +51,7 @@
 {#if showFixedBottomNav}
 	<div class="fixed right-0 bottom-0 left-0 z-[9999] w-full">
 		<HandDrawnBorder height="70px" width="95vw">
-			<div class="h-full w-full bg-black">
+			<div class="h-full w-full bg-soft-black">
 				<SideNavTabs
 					on:tabClick={(e) => handleTabClick(e.detail)}
 					{activePage}
@@ -69,7 +69,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background: black;
+		background: var(--soft-black);
 	}
 	.notebook-inner {
 		display: flex;
