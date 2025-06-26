@@ -30,8 +30,8 @@
 			{#if isFixedBottom}
 				<HandDrawnBorder height="60px" width="100%">
 					<button
-						class={`font-sharpie w-full h-full px-3 py-2 text-sm flex-1 mx-1 transition-all duration-200
-						${tab === activePage ? 'bg-white text-black' : 'text-white hover:bg-white hover:text-black'}`}
+						class={`font-sharpie w-full h-full px-3 py-2 text-base flex-1 mx-1 transition-all duration-200 cursor-pointer
+						${tab === activePage ? 'bg-medium-bg text-soft-black' : 'text-warm-white hover:bg-medium-bg hover:text-soft-black'}`}
 						on:click={() => clickTab(tab)}
 					>
 						{tab}
@@ -39,8 +39,8 @@
 				</HandDrawnBorder>
 			{:else}
 				<button
-					class={`font-sharpie px-4 py-3 text-lg transition-all duration-200 border-2 border-white
-					${tab === activePage ? 'bg-white text-black' : 'text-white hover:bg-white hover:text-black'}`}
+					class={`font-sharpie px-4 py-3 text-xl transition-all duration-200 border-2 border-medium cursor-pointer
+					${tab === activePage ? 'bg-medium-bg text-soft-black' : 'text-warm-white hover:bg-medium-bg hover:text-soft-black'}`}
 					on:click={() => clickTab(tab)}
 				>
 					{tab}
@@ -50,11 +50,11 @@
 	</div>
 {:else}
 	<!-- Desktop Navigation -->
-	<div class="flex flex-col justify-center gap-4 border-l-4 border-white px-2 py-6 h-full">
+	<div class="flex flex-col justify-center gap-4 border-l-4 border-medium px-2 py-6 h-full">
 		{#each tabList as tab}
 			<button
-				class={`origin-right border-r-4 px-2 py-1 text-sm whitespace-nowrap font-sharpie
-				${tab === activePage ? 'border-white bg-white text-black' : 'border-transparent text-white'} transition-all duration-200`}
+				class={`origin-right border-r-4 px-2 py-1 text-base whitespace-nowrap font-sharpie cursor-pointer
+				${tab === activePage ? 'border-medium bg-medium-bg text-soft-black' : 'border-transparent text-warm-white'} transition-all duration-200`}
 				on:click={() => clickTab(tab)}
 			>
 				{tab}

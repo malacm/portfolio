@@ -17,13 +17,13 @@ function checkMobile() {
 </script>
 
 <div class="relative h-full w-full">
-  <div bind:this={aboutContainer} class="flex flex-col w-full h-full gap-8 text-white px-6 py-8 sm:px-4 sm:py-6 overflow-y-auto pr-4 scrollbar-hide">
+  <div bind:this={aboutContainer} class="flex flex-col w-full h-full gap-8 text-warm-white px-6 py-8 sm:px-4 sm:py-6 overflow-y-auto pr-4 scrollbar-hide">
     <!-- Top Section -->
     <div class="w-full">
       <HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
         <div class="p-6 pl-10 sm:p-4 sm:pl-4">
-          <h1 class="font-sharpie mb-2 text-3xl sm:text-2xl">Hey, I'm Marco 👋</h1>
-          <p class="text-base font-sharpie">
+          <h1 class="font-sharpie mb-2 text-4xl sm:text-3xl text-soft-white">Hey, I'm Marco 👋</h1>
+          <p class="text-lg font-sharpie text-warm-white">
             I'm a creative technologist and engineering leader passionate about building expressive, high-impact web experiences. With a background spanning digital agencies, startups, and global brands like National Geographic, I thrive at the intersection of design, technology, and strategy.
           </p>
         </div>
@@ -36,8 +36,8 @@ function checkMobile() {
       <div class="flex-1 w-full md:w-1/2">
         <HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
           <div class="p-6 pl-10 sm:p-4 sm:pl-4">
-            <h2 class="font-sharpie mb-2 text-2xl sm:text-xl">Day to Day</h2>
-            <p class="text-sm leading-relaxed font-sharpie">
+            <h2 class="font-sharpie mb-2 text-3xl sm:text-2xl text-soft-white">Day to Day</h2>
+            <p class="text-base leading-relaxed font-sharpie text-warm-white">
               You'll usually find me sketching, mastering espresso, taking photos, and playing with AI.
             </p>
           </div>
@@ -48,8 +48,8 @@ function checkMobile() {
       <div class="flex-1 w-full md:w-1/2 mt-6 md:mt-0">
         <HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
           <div class="p-6 pl-10 sm:p-4 sm:pl-4">
-            <h2 class="font-sharpie mb-2 text-2xl sm:text-xl">Fun Facts</h2>
-            <ul class="list-inside list-disc text-sm leading-loose font-sharpie">
+            <h2 class="font-sharpie mb-2 text-3xl sm:text-2xl text-soft-white">Fun Facts</h2>
+            <ul class="list-inside list-disc text-base leading-loose font-sharpie text-warm-white">
               <li>Collects Vintage Cameras 📸</li>
               <li>Obsessed with my cats 🐱</li>
               <li>Coffee addict 🧋</li>
@@ -63,8 +63,8 @@ function checkMobile() {
     <div class="w-full">
       <HandDrawnBorder strokeWidth={2.5} roughness={2.2} width="100%">
         <div class="p-6 pl-10 sm:p-4 sm:pl-4">
-          <h2 class="font-sharpie mb-4 text-2xl sm:text-xl">Tools I Use</h2>
-          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm font-sharpie">
+          <h2 class="font-sharpie mb-4 text-3xl sm:text-2xl text-soft-white">Tools I Use</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 text-base font-sharpie text-warm-white">
             <span>🧠 SvelteKit</span>
             <span>🎨 Figma</span>
             <span>🌐 Three.js</span>
@@ -94,7 +94,7 @@ function checkMobile() {
     </div>
 
     <!-- Signature -->
-    <div class="font-sharpie w-full pr-4 text-right text-2xl sm:text-xl">— Marco</div>
+    <div class="font-sharpie w-full pr-4 text-right text-3xl sm:text-2xl text-soft-white">— Marco</div>
   </div>
   {#if aboutContainer}
     <HandDrawnScrollbar container={aboutContainer} />

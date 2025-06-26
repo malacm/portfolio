@@ -75,12 +75,12 @@
 	}
 </script>
 
-<div class="flex h-full w-full flex-col gap-8 px-1 py-2 text-white sm:px-4 sm:py-6">
+<div class="flex h-full w-full flex-col gap-8 px-1 py-2 text-warm-white sm:px-4 sm:py-6">
 	<!-- Header -->
 	<div class="w-full">
 		<div class="p-1 pl-1 sm:p-4 sm:pl-4">
-			<h1 class="font-sharpie mb-2 text-3xl sm:text-2xl">Selected Projects</h1>
-			<p class="font-sharpie text-base sm:text-sm">
+			<h1 class="font-sharpie mb-2 text-4xl sm:text-3xl text-soft-white">Selected Projects</h1>
+			<p class="font-sharpie text-lg sm:text-base text-warm-white">
 				A collection of creative experiments and client work that showcase my approach to building
 				expressive web experiences.
 			</p>
@@ -95,32 +95,32 @@
 					<div class="p-1 pl-1 sm:p-4 sm:pl-4">
 						<!-- Project Header -->
 						<div class="mb-4">
-							<h2 class="font-sharpie mb-2 text-2xl sm:text-xl">{project.name}</h2>
-							<div class="flex flex-wrap gap-4 text-sm sm:gap-2">
-								<span class="font-sharpie rounded-full bg-white/10 px-2 py-1 sm:px-3 sm:py-1">
+							<h2 class="font-sharpie mb-2 text-3xl sm:text-2xl text-soft-white">{project.name}</h2>
+							<div class="flex flex-wrap gap-4 text-base sm:gap-2">
+								<span class="font-sharpie rounded-full bg-medium-bg px-2 py-1 sm:px-3 sm:py-1 text-warm-white">
 									{project.type}
 								</span>
-								<span class="font-sharpie rounded-full bg-white/10 px-2 py-1 sm:px-3 sm:py-1">
+								<span class="font-sharpie rounded-full bg-medium-bg px-2 py-1 sm:px-3 sm:py-1 text-warm-white">
 									{project.role}
 								</span>
 							</div>
 						</div>
 
 						<!-- Project Description -->
-						<p class="font-sharpie text-sm leading-relaxed">
+						<p class="font-sharpie text-base leading-relaxed text-warm-white">
 							{project.description}
 						</p>
 
 						<!-- Project Actions -->
 						<div class="mt-4 flex gap-3 sm:gap-2">
 							<button
-								class="font-sharpie rounded-full bg-white/10 px-2 py-1 text-sm transition-colors hover:bg-white/20 sm:px-3 sm:py-1"
+								class="font-sharpie rounded-full bg-medium-bg px-2 py-1 text-base transition-colors hover:bg-soft-bg text-warm-white sm:px-3 sm:py-1"
 								on:click={() => openProjectWindow(project)}
 							>
 								View Project →
 							</button>
 							<button
-								class="font-sharpie rounded-full border border-white/20 px-2 py-1 text-sm transition-colors bg-white/10 text-gray-400 cursor-not-allowed sm:px-3 sm:py-1"
+								class="font-sharpie rounded-full border border-medium px-2 py-1 text-base transition-colors bg-soft-bg text-medium-gray cursor-not-allowed sm:px-3 sm:py-1"
 								disabled
 							>
 								Coming Soon
@@ -143,7 +143,7 @@
 	{/if}
 
 	<!-- Footer -->
-	<div class="font-sharpie mt-6 w-full pr-1 text-right text-lg sm:mt-4 sm:pr-4">
+	<div class="font-sharpie mt-6 w-full pr-1 text-right text-xl sm:mt-4 sm:pr-4 text-soft-white">
 		More projects coming soon...
 	</div>
 </div>
